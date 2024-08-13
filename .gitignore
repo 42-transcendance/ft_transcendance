@@ -1,0 +1,5 @@
+**.pyc
+NOT*
+.env
+.nfs**
+**/__pycache__/**

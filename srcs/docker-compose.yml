@@ -1,0 +1,58 @@
+# ######################################################################################################################
+#
+#              """          docker-compose.yml
+#       -\-    _|__
+#        |\___/  . \        Created on 13 Aug. 2024 at 14:39
+#        \     /(((/        by hmelica
+#         \___/)))/         hmelica@student.42.fr
+#
+# ######################################################################################################################
+
+version: '3.1'
+
+services:
+  django:
+    container_name: django
+    volumes:
+      - site:/var/www
+    networks:
+      - transcendance
+    env_file: .env
+    restart: unless-stopped
+    build:
+      context: ./requirements/django
+    ports:
+      - 8000:8000
+
+  nginx:
+    container_name: nginx
+    networks:
+      - transcendance
+    # volumes:
+    #   - static:/usr/share/nginx/html
+    build:
+      context: ./requirements/nginx
+    ports:
+      - 8080:443
+    restart: on-failure
+
+volumes:
+  site:
+    name: site
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '../site'
+  static:
+    name: static
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '../static'
+
+networks:
+  transcendance:
+    name: transcendance
+    driver: bridge

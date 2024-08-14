@@ -8,8 +8,6 @@
 #
 # ######################################################################################################################
 
-version: '3.1'
-
 services:
   django:
     container_name: django
@@ -21,10 +19,11 @@ services:
     restart: unless-stopped
     build:
       context: ./requirements/django
-    ports:
-      - 8000:8000
+    expose:
+      - ${INTERNAL_DJANGO_PORT}
 
   nginx:
+    env_file: .env
     container_name: nginx
     networks:
       - transcendance
@@ -33,7 +32,7 @@ services:
     build:
       context: ./requirements/nginx
     ports:
-      - 8080:443
+      - ${EXTERNAL_NGINX_PORT}:443
     restart: on-failure
 
 volumes:
@@ -54,5 +53,3 @@ volumes:
 
 networks:
   transcendance:
-    name: transcendance
-    driver: bridge

@@ -17,5 +17,5 @@ LABEL description="Django instance"
 
 WORKDIR /var/www
 
-ENTRYPOINT ["python3", "manage.py", "runserver"]
+ENTRYPOINT ["bash", "/run.sh"]
 # for testing purposes

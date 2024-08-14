@@ -1,7 +1,7 @@
 FROM nginx
 
 RUN apt-get update \
-    && apt-get install -y openssl \
+    && apt-get install -y openssl less \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./tools /build
@@ -11,4 +11,4 @@ RUN bash /build/init.sh \
 
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx-debug", "-g", "daemon off;"]

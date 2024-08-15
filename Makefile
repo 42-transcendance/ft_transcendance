@@ -41,4 +41,5 @@ load_env:
 	scripts/decrypt_env.sh env_file srcs/.env
 
 install_hooks:
-	cp scripts/pre-commit.sh .git/hooks/pre-commit
+	@cp -v scripts/pre-commit.sh .git/hooks/pre-commit
+	@cp -v scripts/post-merge.sh .git/hooks/post-merge

@@ -1,6 +1,8 @@
 FROM docker.elastic.co/elasticsearch/elasticsearch:8.15.0
 
+# Port 9200 is the default port for Elasticsearch’s REST API
 EXPOSE 9200
+# Port 9300 is used for inter-node communication
 # EXPOSE 9300
 
 CMD ["bin/elasticsearch"]

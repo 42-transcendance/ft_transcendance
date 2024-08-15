@@ -43,8 +43,8 @@ services:
       context: ./requirements/elasticsearch
       dockerfile: Dockerfile.elasticsearch
     environment:
-      - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - discovery.type=${DISCOVERY_TYPE}
+      - ES_JAVA_OPTS=${ES_JAVA_OPTS}
     volumes:
       - es_data:/usr/share/elasticsearch/data
     ports:
@@ -63,7 +63,7 @@ services:
       - "5044:5044"
       - "9600:9600"
     volumes:
-      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./requirements/logstash/conf/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     depends_on:
       - elasticsearch
     networks:

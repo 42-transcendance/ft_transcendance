@@ -12,7 +12,7 @@ services:
   django:
     container_name: django
     volumes:
-      - site:/var/www
+      - site:/usr/src/app
     networks:
       - transcendance
     env_file: .env

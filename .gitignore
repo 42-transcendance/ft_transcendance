@@ -1,5 +1,6 @@
 **.pyc
 NOT*
 .env
+**/.env
 .nfs**
 **/__pycache__/**

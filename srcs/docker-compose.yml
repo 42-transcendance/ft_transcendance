@@ -32,7 +32,7 @@ services:
     build:
       context: ./requirements/nginx
     ports:
-      - ${EXTERNAL_NGINX_PORT}:443
+      - ${EXTERNAL_NGINX_PORT}:${SITE_PORT}
     restart: on-failure
 
 volumes:

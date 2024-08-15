@@ -9,10 +9,8 @@ if [ ! -f srcs/.env ]; then
     fi
 fi
 
-scripts/decrypt_env.sh env_file .NOTenv_file 2>/dev/null 1>/dev/null
-diff --color=always srcs/.env .NOTenv_file
+scripts/decrypt_env.sh env_file - 2>/dev/null | diff --color=always srcs/.env -
 DIF=$?
-rm .NOTenv_file
 if [ ! $DIF -eq 0 ];then
 	scripts/encrypt_env.sh srcs/.env env_file
     echo "env_file has been updated. Please run"

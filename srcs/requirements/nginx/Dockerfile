@@ -11,4 +11,6 @@ RUN bash /build/init.sh \
 
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
-ENTRYPOINT ["nginx-debug", "-g", "daemon off;"]
+COPY templates/* /etc/nginx/templates/
+
+COPY static/* /usr/share/nginx/html/

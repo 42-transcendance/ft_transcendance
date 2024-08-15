@@ -4,3 +4,4 @@ NOT*
 **/.env
 .nfs**
 **/__pycache__/**
+.passwd

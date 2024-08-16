@@ -47,10 +47,10 @@ services:
       - ES_JAVA_OPTS=${ES_JAVA_OPTS}
     volumes:
       - es_data:/usr/share/elasticsearch/data
+    expose:
+      - ${ELASTICSEARCH_PORT}
     ports:
-      - "9200:9200"
-      # Ports for inter-node communication (not needed in single-node config)
-      # - "9300:9300"
+      - ${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}
     networks:
       - elk
 
@@ -59,9 +59,12 @@ services:
     build:
       context: ./requirements/logstash
       dockerfile: Dockerfile.logstash
+    expose:
+      - ${BEATS_PORT}
+      - ${INTERNAL_LOGSTASH_PORT}
     ports:
-      - "5044:5044"
-      - "9600:9600"
+      - ${BEATS_PORT}:${BEATS_PORT}
+      - ${INTERNAL_LOGSTASH_PORT}:${INTERNAL_LOGSTASH_PORT}
     volumes:
       - ./requirements/logstash/conf/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     depends_on:
@@ -74,8 +77,10 @@ services:
     build:
       context: ./requirements/kibana
       dockerfile: Dockerfile.kibana
+    expose:
+      - ${EXTERNAL_KIBANA_PORT}
     ports:
-      - "5601:5601"
+      - ${EXTERNAL_KIBANA_PORT}:${EXTERNAL_KIBANA_PORT}
     depends_on:
       - elasticsearch
     networks:

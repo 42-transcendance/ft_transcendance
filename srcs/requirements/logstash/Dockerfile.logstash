@@ -2,8 +2,4 @@ FROM docker.elastic.co/logstash/logstash-oss:8.15.0
 
 COPY ./conf/logstash.conf /usr/share/logstash/pipeline/logstash.conf
 
-# Port 5044 is the default port for the Beats input plugin in Logstash
-# Port 9600 is use to monitor the health and performance of Logstash
-EXPOSE 5044 9600
-
 CMD ["bin/logstash"]

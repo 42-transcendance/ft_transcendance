@@ -1,5 +1,8 @@
 FROM python
 
+LABEL version="1.0"
+LABEL description="Django instance"
+
 # RUN apt-get update \
 #     && apt-get upgrade -y \
 #     && apt-get install -y python3 python3-pip \
@@ -8,12 +11,11 @@ FROM python
 
 RUN python3 -m pip install --upgrade pip wheel
 
-COPY . /
+COPY requirements.txt /
 
 RUN python3 -m pip install --root-user-action=ignore -r requirements.txt
 
-LABEL version="1.0"
-LABEL description="Django instance"
+COPY run.sh /
 
 WORKDIR /usr/src/app
 

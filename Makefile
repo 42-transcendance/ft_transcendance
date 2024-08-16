@@ -42,4 +42,6 @@ load_env:
 
 install_hooks:
 	@cp -v scripts/pre-commit.sh .git/hooks/pre-commit
+	@chmod +x .git/hooks/pre-commit
 	@cp -v scripts/post-merge.sh .git/hooks/post-merge
+	@chmod +x .git/hooks/post-merge

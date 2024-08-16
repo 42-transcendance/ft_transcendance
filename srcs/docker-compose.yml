@@ -16,6 +16,8 @@ services:
     networks:
       - transcendance
     env_file: .env
+    environment:
+      NAME: "django_site"
     restart: unless-stopped
     build:
       context: ./requirements/django

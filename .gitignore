@@ -5,3 +5,5 @@ NOT*
 .nfs**
 **/__pycache__/**
 .passwd
+es_data
+es_data/**

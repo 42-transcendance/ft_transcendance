@@ -37,6 +37,55 @@ services:
       - ${EXTERNAL_NGINX_PORT}:${SITE_PORT}
     restart: on-failure
 
+  elasticsearch:
+    container_name: elasticsearch
+    build:
+      context: ./requirements/elasticsearch
+      dockerfile: Dockerfile.elasticsearch
+    environment:
+      - discovery.type=${DISCOVERY_TYPE}
+      - ES_JAVA_OPTS=${ES_JAVA_OPTS}
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    expose:
+      - ${ELASTICSEARCH_PORT}
+    ports:
+      - ${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}
+    networks:
+      - elk
+
+  logstash:
+    container_name: logstash
+    build:
+      context: ./requirements/logstash
+      dockerfile: Dockerfile.logstash
+    expose:
+      - ${BEATS_PORT}
+      - ${INTERNAL_LOGSTASH_PORT}
+    ports:
+      - ${BEATS_PORT}:${BEATS_PORT}
+      - ${INTERNAL_LOGSTASH_PORT}:${INTERNAL_LOGSTASH_PORT}
+    volumes:
+      - ./requirements/logstash/conf/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+
+  kibana:
+    container_name: kibana
+    build:
+      context: ./requirements/kibana
+      dockerfile: Dockerfile.kibana
+    expose:
+      - ${EXTERNAL_KIBANA_PORT}
+    ports:
+      - ${EXTERNAL_KIBANA_PORT}:${EXTERNAL_KIBANA_PORT}
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+
 volumes:
   site:
     name: site
@@ -52,6 +101,15 @@ volumes:
       type: 'none'
       o: 'bind'
       device: '../static'
+  es_data:
+    name: es_data
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '../es_data'
 
 networks:
   transcendance:
+  elk:
+    driver: bridge

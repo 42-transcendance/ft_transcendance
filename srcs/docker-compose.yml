@@ -24,6 +24,17 @@ services:
     expose:
       - ${INTERNAL_DJANGO_PORT}
 
+  frontend:
+    container_name: frontend
+    env_file: .env
+    networks:
+        - transcendance
+    expose:
+      - ${INTERNAL_FRONTEND_PORT}
+    build:
+      context: ./requirements/frontend/
+    restart: unless-stopped
+
   nginx:
     env_file: .env
     container_name: nginx

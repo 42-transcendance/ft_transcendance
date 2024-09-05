@@ -30,6 +30,7 @@ services:
     networks:
       - transcendance
     # volumes:
+      # - nginx_logs:/var/logs/nginx
     #   - static:/usr/share/nginx/html
     build:
       context: ./requirements/nginx
@@ -45,6 +46,7 @@ services:
     environment:
       - discovery.type=${DISCOVERY_TYPE}
       - ES_JAVA_OPTS=${ES_JAVA_OPTS}
+      - xpack.security.enabled=false # for developement purpose
     volumes:
       - es_data:/usr/share/elasticsearch/data
     expose:
@@ -52,7 +54,7 @@ services:
     ports:
       - ${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}
     networks:
-      - elk
+      - transcendance
 
   logstash:
     container_name: logstash
@@ -60,31 +62,34 @@ services:
       context: ./requirements/logstash
       dockerfile: Dockerfile.logstash
     expose:
-      - ${BEATS_PORT}
       - ${INTERNAL_LOGSTASH_PORT}
     ports:
-      - ${BEATS_PORT}:${BEATS_PORT}
       - ${INTERNAL_LOGSTASH_PORT}:${INTERNAL_LOGSTASH_PORT}
     volumes:
       - ./requirements/logstash/conf/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      # - nginx_logs:/var/logs/nginx
     depends_on:
       - elasticsearch
     networks:
-      - elk
+      - transcendance
 
   kibana:
     container_name: kibana
     build:
       context: ./requirements/kibana
       dockerfile: Dockerfile.kibana
+    environment:
+      - xpack.elasticAssistant.enabled=false
+      - SERVER_BASEPATH=/kibana
+      - SERVER_REWRITEBASEPATH=false=value
     expose:
-      - ${EXTERNAL_KIBANA_PORT}
+      - 5601
     ports:
-      - ${EXTERNAL_KIBANA_PORT}:${EXTERNAL_KIBANA_PORT}
+      - ${EXTERNAL_KIBANA_PORT}:5601
     depends_on:
       - elasticsearch
     networks:
-      - elk
+      - transcendance
 
 volumes:
   site:
@@ -111,5 +116,3 @@ volumes:
 
 networks:
   transcendance:
-  elk:
-    driver: bridge

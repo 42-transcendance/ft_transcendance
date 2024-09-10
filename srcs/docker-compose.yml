@@ -27,26 +27,25 @@ services:
   nginx:
     env_file: .env
     container_name: nginx
-    networks:
-      - transcendance
-    # volumes:
-      # - nginx_logs:/var/logs/nginx
-    #   - static:/usr/share/nginx/html
     build:
       context: ./requirements/nginx
+      dockerfile: Dockerfile.nginx
+    # volumes:
+    #   - nginx_logs:/var/log/nginx
     ports:
       - ${EXTERNAL_NGINX_PORT}:${SITE_PORT}
     restart: on-failure
+    networks:
+      - transcendance
 
   elasticsearch:
     container_name: elasticsearch
+    env_file: .env
     build:
       context: ./requirements/elasticsearch
       dockerfile: Dockerfile.elasticsearch
     environment:
-      - discovery.type=${DISCOVERY_TYPE}
-      - ES_JAVA_OPTS=${ES_JAVA_OPTS}
-      - xpack.security.enabled=false # for developement purpose
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
     volumes:
       - es_data:/usr/share/elasticsearch/data
     expose:
@@ -58,16 +57,15 @@ services:
 
   logstash:
     container_name: logstash
+    env_file: .env
     build:
       context: ./requirements/logstash
       dockerfile: Dockerfile.logstash
-    expose:
-      - ${INTERNAL_LOGSTASH_PORT}
-    ports:
-      - ${INTERNAL_LOGSTASH_PORT}:${INTERNAL_LOGSTASH_PORT}
-    volumes:
-      - ./requirements/logstash/conf/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      # - nginx_logs:/var/logs/nginx
+    environment:
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+    # volumes:
+      # - nginx_logs:/var/log/nginx
     depends_on:
       - elasticsearch
     networks:
@@ -75,13 +73,10 @@ services:
 
   kibana:
     container_name: kibana
+    env_file: .env
     build:
       context: ./requirements/kibana
       dockerfile: Dockerfile.kibana
-    environment:
-      - xpack.elasticAssistant.enabled=false
-      - SERVER_BASEPATH=/kibana
-      - SERVER_REWRITEBASEPATH=false=value
     expose:
       - 5601
     ports:
@@ -105,7 +100,14 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '../static'
+      device: '../static'  
+  # nginx_logs:
+  #   name: nginx_logs
+  #   driver: local
+  #   driver_opts:
+  #     type: 'none'
+  #     o: 'bind'
+  #     device: '../logs/nginx'
   es_data:
     name: es_data
     driver: local

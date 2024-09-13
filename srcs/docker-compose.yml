@@ -37,6 +37,8 @@ services:
     restart: on-failure
     networks:
       - transcendance
+    depends_on:
+      - logstash
 
   elasticsearch:
     container_name: elasticsearch

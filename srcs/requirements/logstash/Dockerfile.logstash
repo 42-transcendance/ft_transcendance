@@ -1,10 +1,6 @@
 FROM docker.elastic.co/logstash/logstash-oss:8.15.0
 
-USER root
-
-RUN apt-get update \
-    && apt-get install -y net-tools curl iputils-ping \
-    && rm -rf /var/lib/apt/lists/*
+RUN rm -f /usr/share/logstash/pipeline/logstash.conf
 
 COPY ./conf/logstash.conf /usr/share/logstash/pipeline/logstash.conf
 

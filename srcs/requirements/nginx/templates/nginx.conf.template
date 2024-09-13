@@ -16,6 +16,7 @@ server {
     ssl_certificate_key /etc/nginx/ssl/transcendance.key;
 
     access_log /var/log/nginx/access.log;
+    access_log syslog:server=logstash:5045,severity=info json_combined ;
 
     gzip on;
 }

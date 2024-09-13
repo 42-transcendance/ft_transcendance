@@ -2,6 +2,5 @@ server.host: "0.0.0.0"
 elasticsearch.hosts: [ "http://elasticsearch:9200" ]
 
 # Credentials
-# xpack.encryptedSavedObjects.encryptionKey: ${KIBANA_SERVICE_TOKEN}
 elasticsearch.username: ${KIBANA_USERNAME}
 elasticsearch.password: ${KIBANA_PASSWORD}
